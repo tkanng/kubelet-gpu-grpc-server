@@ -28,6 +28,7 @@ func dial(unixSocketPath string, timeout time.Duration) (*grpc.ClientConn, error
 }
 
 func main() {
+
 	conn, err := dial(socket, 5*time.Second)
 	if err != nil {
 		log.Fatalf("dial error: %v\n", err)
@@ -38,7 +39,6 @@ func main() {
 	stream, _ := client.GetGPUMemoryCapacityAndUsed(context.Background(), req)
 	for {
 		response, _ := stream.Recv()
-		time.Sleep(2 * time.Second)
 		// 实例化 UserInfoService 微服务的客户端
 		// 调用服务
 		fmt.Printf("Recevied: %v\n", response)

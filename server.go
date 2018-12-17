@@ -65,12 +65,17 @@ func (s *GPUInfoServer) GetGPUMemoryCapacityAndUsed(rect *pb.Request, stream pb.
 		time.Sleep(4 * time.Second)
 		cap, used, err := getGPUMemoryCapacityAndUsed()
 		if err != nil {
-			fmt.Printf("Error:%v", err)
+			fmt.Printf("Error:%v\n", err)
 			continue
 		}
-		stream.Send(&pb.GPUMemoryResponse{Cap: cap, Used: used})
-		fmt.Printf("cap:%v, used: %v", cap, used)
+		err = stream.Send(&pb.GPUMemoryResponse{Cap: cap, Used: used})
+		if err != nil {
+			fmt.Printf("Error:%v\n", err)
+			break
+		}
+		fmt.Printf("cap:%v, used: %v\n", cap, used)
 	}
+	return nil
 }
 
 func (s *GPUInfoServer) cleanup() error {
@@ -168,5 +173,6 @@ func main() {
 				restart = false
 			}
 		}
+		time.Sleep(30 * time.Second)
 	}
 }
