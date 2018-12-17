@@ -1,0 +1,15 @@
+syntax = "proto3";	
+package proto;	
+
+
+service GPUInfoService {
+    rpc GetGPUMemoryCapacityAndUsed(Request)returns(stream GPUMemoryResponse){
+    }
+}
+
+message Request{}
+
+message GPUMemoryResponse {
+    repeated int64 cap = 1;	
+    repeated int64 used = 2;
+}
