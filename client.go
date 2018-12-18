@@ -28,7 +28,6 @@ func dial(unixSocketPath string, timeout time.Duration) (*grpc.ClientConn, error
 }
 
 func main() {
-
 	conn, err := dial(socket, 5*time.Second)
 	if err != nil {
 		log.Fatalf("dial error: %v\n", err)

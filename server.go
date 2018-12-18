@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"flag"
 	pb "gpu-rpc/proto"
 	"log"
 	"net"
@@ -13,32 +13,29 @@ import (
 	grpc "google.golang.org/grpc"
 )
 
-const serverSocket = "/var/lib/kubelet/gpu.sock"
+const defaultSocket = "/var/lib/kubelet/gpu.sock"
 
-// 定义服务端实现约定的接口
 type GPUInfoServer struct {
 	socket string
 	server *grpc.Server
 }
 
-func NewGPUInfoServer() *GPUInfoServer {
+func NewGPUInfoServer(s string) *GPUInfoServer {
 	return &GPUInfoServer{
-		socket: serverSocket,
+		socket: s,
 	}
 }
 
-// 实现 interface
 func getGPUMemoryCapacityAndUsed() ([]int64, []int64, error) {
-	// 模拟在数据库中查找用户信息
 	cap := make([]int64, 0)
 	used := make([]int64, 0)
 	if err := nvml.Initialize(); err != nil {
-		log.Println(err)
+		log.Printf("Can't initialize NVML: %v \n", err)
 		return cap, used, err
 	}
 	n, err := nvml.DeviceCount()
 	if err != nil {
-		log.Println(err)
+		log.Printf("Failed to fetch Can't initialize NVML: %v \n", err)
 		return cap, used, err
 	}
 	cap = make([]int64, n)
@@ -46,12 +43,12 @@ func getGPUMemoryCapacityAndUsed() ([]int64, []int64, error) {
 	for i := uint(0); i < n; i++ {
 		d, err := nvml.DeviceHandleByIndex(i)
 		if err != nil {
-			log.Println(err)
+			log.Printf("Failed to get device(%d): %v", i, err)
 			return cap, used, err
 		}
 		t, u, err := d.MemoryInfo()
 		if err != nil {
-			log.Println(err)
+			log.Printf("Failed to get device(%d) GPU info: %v", i, err)
 			return cap, used, err
 		}
 		cap[i] = int64(t) / (1024 * 1024)
@@ -65,15 +62,15 @@ func (s *GPUInfoServer) GetGPUMemoryCapacityAndUsed(rect *pb.Request, stream pb.
 		time.Sleep(4 * time.Second)
 		cap, used, err := getGPUMemoryCapacityAndUsed()
 		if err != nil {
-			fmt.Printf("Error:%v\n", err)
+			log.Printf("Failed to get node GPU memory:%v\n", err)
 			continue
 		}
 		err = stream.Send(&pb.GPUMemoryResponse{Cap: cap, Used: used})
 		if err != nil {
-			fmt.Printf("Error:%v\n", err)
+			log.Printf("Failed to send GPU memory response: %v\n", err)
 			break
 		}
-		fmt.Printf("cap:%v, used: %v\n", cap, used)
+		log.Printf("Cap:%v, Used: %v\n", cap, used)
 	}
 	return nil
 }
@@ -132,7 +129,7 @@ func (s *GPUInfoServer) Stop() error {
 func (s *GPUInfoServer) Serve() error {
 	err := s.Start()
 	if err != nil {
-		log.Printf("Could not start GPUInfoServer: %s", err)
+		log.Printf("Could not start GPUInfoServer: %s\n", err)
 		s.Stop()
 		return err
 	}
@@ -141,13 +138,15 @@ func (s *GPUInfoServer) Serve() error {
 }
 
 func main() {
+	var socketPath string
+	flag.StringVar(&socketPath, "socket", defaultSocket, "GPU grpc server socket path")
+	flag.Parse()
 	log.Println("Loading NVML")
 	if err := nvml.Initialize(); err != nil {
 		log.Printf("Failed to initialize NVML: %s.", err)
 		log.Printf("If this is a GPU node, did you set the docker default runtime to `nvidia`?")
 		log.Printf("You can check the prerequisites at: https://github.com/NVIDIA/k8s-device-plugin#prerequisites")
 		log.Printf("You can learn how to set the runtime at: https://github.com/NVIDIA/k8s-device-plugin#quick-start")
-
 		log.Println("Waiting indefinitely.")
 		select {}
 	}
@@ -166,7 +165,7 @@ func main() {
 			if server != nil {
 				server.Stop()
 			}
-			server = NewGPUInfoServer()
+			server = NewGPUInfoServer(socketPath)
 			if err := server.Serve(); err != nil {
 				time.Sleep(2 * time.Second)
 			} else {
