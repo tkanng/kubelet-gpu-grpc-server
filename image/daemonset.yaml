@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: gpu-grpc-server
+  labels:
+    k8s-app: gpu-grpc-server
+spec:
+  selector:
+    matchLabels:
+      k8s-app: gpu-grpc-server
+  template:
+    metadata:
+      labels:
+        k8s-app: gpu-grpc-server
+    spec:
+      volumes:
+      - name: working-dir
+        hostPath:
+          path: /var/lib/kubelet
+      containers:
+      - image: "tkanng/grpc-server:ubuntu"
+        command: ["gpu-grpc-server", "-socket","/var/lib/kubelet/gpu.sock"]
+        name: gpu-grpc-server
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - name: working-dir
+          mountPath: /var/lib/kubelet
+  updateStrategy:
+    type: RollingUpdate

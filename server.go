@@ -74,7 +74,6 @@ func (s *GPUInfoServer) GetGPUMemoryCapacityAndUsed(rect *pb.Request, stream pb.
 	}
 	return nil
 }
-
 func (s *GPUInfoServer) cleanup() error {
 	if err := os.Remove(s.socket); err != nil && !os.IsNotExist(err) {
 		return err
