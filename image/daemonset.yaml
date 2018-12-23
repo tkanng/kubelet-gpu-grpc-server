@@ -13,12 +13,15 @@ spec:
       labels:
         k8s-app: gpu-grpc-server
     spec:
+      tolerations:
+      - operator: Exists
+        effect: NoSchedule
       volumes:
       - name: working-dir
         hostPath:
           path: /var/lib/kubelet
       containers:
-      - image: "tkanng/grpc-server:ubuntu"
+      - image: "tkanng/grpc-server:ubuntu-normal"
         command: ["gpu-grpc-server", "-socket","/var/lib/kubelet/gpu.sock"]
         name: gpu-grpc-server
         securityContext:
