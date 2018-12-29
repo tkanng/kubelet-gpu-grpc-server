@@ -21,7 +21,7 @@ spec:
         hostPath:
           path: /var/lib/kubelet
       containers:
-      - image: "tkanng/grpc-server:ubuntu-normal"
+      - image: "tkanng/gpu-grpc-server:rancher-test"
         command: ["gpu-grpc-server", "-socket","/var/lib/kubelet/gpu.sock"]
         name: gpu-grpc-server
         securityContext:
