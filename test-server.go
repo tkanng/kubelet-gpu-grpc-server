@@ -28,12 +28,13 @@ func NewGPUInfoServer(s string) *GPUInfoServer {
 }
 
 func getGPUMemoryCapacityAndUsed() ([]int64, []int64, error) {
-	cap := make([]int64, 2)
-	used := make([]int64, 2)
-	used[0] = rand.Int63n(10000)
-	used[1] = rand.Int63n(10000)
-	cap[0] = used[0] + 1000
-	cap[1] = used[1] + 1000
+	cap := make([]int64, 8)
+	used := make([]int64, 8)
+
+	used[0] = rand.Int63n(1000)
+	used[1] = rand.Int63n(1000)
+	cap[0] = used[0] + 10000
+	cap[1] = used[1] + 10000
 	return cap, used, nil
 	if err := nvml.Initialize(); err != nil {
 		log.Printf("Can't initialize NVML: %v \n", err)
