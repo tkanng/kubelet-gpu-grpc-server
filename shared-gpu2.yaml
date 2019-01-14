@@ -1,0 +1,11 @@
+apiVersion:  v1
+kind: Pod
+metadata:
+  name: shared-gpu2
+spec:
+  containers:
+  - name: shared-gpu2
+    image: tkanng/ubuntu:hhh
+    resources:
+      limits:
+        nvidia.com/shared-gpu: "1"

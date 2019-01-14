@@ -1,0 +1,40 @@
+apiVersion: v1
+kind: Config
+clusters:
+- name: "test-gpu"
+  cluster:
+    server: "https://10.130.9.41:8443/k8s/clusters/c-mfbf7"
+    api-version: v1
+    certificate-authority-data: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUM3akNDQ\
+      WRhZ0F3SUJBZ0lCQURBTkJna3Foa2lHOXcwQkFRc0ZBREFvTVJJd0VBWURWUVFLRXdsMGFHVXQKY\
+      21GdVkyZ3hFakFRQmdOVkJBTVRDV05oZEhSc1pTMWpZVEFlRncweE9UQXhNRGd3TnpVNE1qbGFGd\
+      zB5T1RBeApNRFV3TnpVNE1qbGFNQ2d4RWpBUUJnTlZCQW9UQ1hSb1pTMXlZVzVqYURFU01CQUdBM\
+      VVFQXhNSlkyRjBkR3hsCkxXTmhNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ\
+      0tDQVFFQTBRUTFXcFZkeDJIYXNTVlQKRUtWNVp3K0Uzd0FZUVZVK2ZQbU44bWpGZk56bFk2VUsyL\
+      zl0WkRZbjIyL0NiT1d6SXRkNTFuWHdaUkk2c2Q2YgpOQ2lUS2p1Tmx3U1ZtQWFsY2hQc0xjK0wvd\
+      nBzQzh2SDBaeWdtK0daOHRPSnd2YkJTS0x4TkFreEl5WmFTOHE2CkFjZmNTUmdEMDdCVTRkZkNRN\
+      0NVdkp2RExMME5oT1MzclArWnpNUWdQeWxQWjZuT2IxekdoWHpwZnY0eFlBcisKVUwrZmN2RUlKZ\
+      mE0aFYxU1pOdnU3RTRaRUJGQ0ZvVTg3VndHdFB5YW85VEVLKzNkUytIckNnOEhPbmNybEpQbgpLQ\
+      Wtpd1VHQjNyYVdveUM5VE5hMGkzU2svdzZYUkxpUUxURmJpVWUyaS8yaWcrVVNzeWd4ZDdpWDNDS\
+      ll4NiszCnhPUkVzd0lEQVFBQm95TXdJVEFPQmdOVkhROEJBZjhFQkFNQ0FxUXdEd1lEVlIwVEFRS\
+      C9CQVV3QXdFQi96QU4KQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBd1hFaTdPenZNNFRpdTFRd3RYe\
+      lRKRXhMZEFDREZjYkNkRENUS2JaWgpvOWtORDEzbGMvbFBvRUs1ejI3YVdMM1l1a0hKbVRtVUhHN\
+      kd6aHVPTUdNR0dsRFFMMXdZVDFETUZkdWZUbjlTClNaYU5MQXU3Y3lCZFlQR2s2ZTZMTm90VkY0V\
+      0NoWS92c3Z4bHArOFQ2NlFheGNObjBVMDNGTHJiWHlVajN4cUIKb3YwelJyWHliL2loUktIUUo5S\
+      kZyNWxUUXpqa05WWHBWVXFSOXd6d1ZVb21OZndCb3c5Y0lVeFNhNkVxVW9QUApob3pBTGQ5dzlkZ\
+      FE5dUZMN3JYNy9iakd2UEFaQ0xDRG42MlpZUi9Ja3FXeWNweVRtNmNDUEFLaFNUMm5ueXZECmMya\
+      UI1djdaNS8raHl3WUFzTXBaUC82N1pkKzVWUDUvaHpZWXBaRXhYN1htcGc9PQotLS0tLUVORCBDR\
+      VJUSUZJQ0FURS0tLS0t"
+
+users:
+- name: "user-d5r2h"
+  user:
+    token: "kubeconfig-user-d5r2h:fb4zdnm9cfcbjjv2b7blckdvprmx6nvzvvqnhs65qsl449sdxxbpvx"
+
+contexts:
+- name: "test-gpu"
+  context:
+    user: "user-d5r2h"
+    cluster: "test-gpu"
+
+current-context: "test-gpu"
